@@ -12,7 +12,7 @@ class News:
     title: str
     content: str
     related_topics: List[str]
-    menu_name: str = None
+    menu_name: str
     sub_menu_name: str = None
     contributor_name: str = None
     contributor_role: str = None

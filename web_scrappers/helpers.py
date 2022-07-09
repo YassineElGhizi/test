@@ -22,10 +22,10 @@ def get_main_menu_links(soup):
 
 
 def check_if_it_contains_submenu(soup) -> bool:
-    exists = soup.findAll('nav', {'class': 'nw-c-nav__wide-secondary'})
-    if not len(exists):
-        return False
-    return True
+    return soup.findAll('nav', {'class': 'nw-c-nav__wide-secondary'})
+    # if not len(exists):
+    #     return False
+    # return True
 
 
 def get_api_url(soup, page_number: int) -> str:

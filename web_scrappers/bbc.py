@@ -21,11 +21,27 @@ def collect_data(main_menu_and_their_links):
     for m in main_menu_and_their_links:
         res = GLOBAL_SESSION.get(m["link"], headers=headers)
         soup = BS(res.text, features="html.parser")
-        if check_if_it_contains_submenu(soup):
-            print(f'link = {m["link"]} has a sub menu')
-        else:
-            scrap_news(soup, GLOBAL_SESSION, m["menu"], None)
+        flag = check_if_it_contains_submenu(soup)
+        if flag:
+            sub_navs = soup.find('nav', {'class': 'nw-c-nav__wide-secondary'})
+            current = ((sub_navs.find('span').get_text()).replace(' selected', '')).strip().lower().replace(' ', '_')
+            lis = [
+                {
+                    "name": f"{li.get_text()}",
+                    "link": f"{prefix}{li.find('a').get('href')}"}
+                for li in sub_navs.findAll('li') if li.get_text() != 'More More sections'
+            ]
+            print(f'current = {current}')
+            print(f'lis = {lis}')
+            scrap_news(soup, GLOBAL_SESSION, m["menu"], current)
+            for sub_cat in lis:
+                sub_cat_res = GLOBAL_SESSION.get(sub_cat["link"], headers=headers)
+                sub_cat_soup = BS(sub_cat_res, features='html.parser')
+                scrap_news(sub_cat_soup, GLOBAL_SESSION, m["menu"], sub_cat["link"])
             quit()
+        else:
+            continue
+            scrap_news(soup, GLOBAL_SESSION, m["menu"], None)
 
 
 if __name__ == '__main__':
