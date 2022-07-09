@@ -1,4 +1,7 @@
-from global_params import prefix, api_prefix
+import json
+from datetime import datetime
+
+from global_params import prefix, api_prefix, api_headers
 
 
 def get_main_menu_links(soup):
@@ -32,3 +35,29 @@ def get_api_url(soup):
         target = target.split(", {")[0]
         target = target.replace("'", "")
         return f'{api_prefix}{target}'
+
+
+def scrap_news(soup, session, ):
+    print(f'link = {get_api_url(soup)}')
+    res2 = session.get(get_api_url(soup), headers=api_headers)
+    json_response = json.loads(res2.text)
+    results = json_response['payload'][0]['body']['results']
+    list_results = []
+    for r in results:
+        firstPublished = datetime.strptime(r["firstPublished"].split('T')[0], "%Y-%m-%d")
+        url = r["url"]
+        image = r["image"]["href"]
+        summary = r["summary"]
+        title = r["title"]
+
+        try:
+            contributor_name = r["contributor"]["name"]
+        except KeyError:
+            contributor_name = None
+        try:
+            contributor_role = r["contributor"]["role"]
+        except KeyError:
+            contributor_role = None
+        print(f'firstPublished = {firstPublished}')
+        print(f'{(datetime.now() - firstPublished).days} days old')
+        print("\n")
