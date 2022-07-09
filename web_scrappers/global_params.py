@@ -24,3 +24,4 @@ api_headers = {
 website_target = 'https://www.bbc.com/news'
 prefix = 'https://www.bbc.com'
 api_prefix = 'https://push.api.bbci.co.uk/batch?t='
+historical_time_line_in_months = 1
