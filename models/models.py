@@ -8,8 +8,8 @@ class News:
     dateAdded: datetime
     url: str
     images: List[str]
-    summary: str
     title: str
+    sub_title: str
     content: str
     related_topics: List[str]
     menu_name: str
